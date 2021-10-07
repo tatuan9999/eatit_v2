@@ -12,14 +12,14 @@ class CartStateController extends GetxController {
   var cart = List<CartModel>.empty(growable: true).obs;
   final box = GetStorage();
 
-  getCartAnonymous(String restaurantId) => cart.where((item) =>
-      item.restaurantId == restaurantId && (item.userUid == KEY_ANONYMOUS));
+  List<CartModel> getCartAnonymous(String restaurantId) => cart.where((item) =>
+      item.restaurantId == restaurantId && (item.userUid == KEY_ANONYMOUS)).toList();
 
-  getCart(String restaurantId) => cart.where((item) =>
+  List<CartModel> getCart(String restaurantId) => cart.where((item) =>
       item.restaurantId == restaurantId &&
       (FirebaseAuth.instance.currentUser == null
           ? item.userUid == KEY_ANONYMOUS
-          : item.userUid == FirebaseAuth.instance.currentUser!.uid));
+          : item.userUid == FirebaseAuth.instance.currentUser!.uid)).toList();
 
   addToCart(FoodModel foodModel, String restaurantId, {int quantity: 1}) async {
     try {
@@ -80,7 +80,8 @@ class CartStateController extends GetxController {
       sumCart(restaurantId) + getShippingFee(restaurantId);
 
   clearCart(String restaurantId) {
-    cart = getCart(restaurantId).clear();
+    cart.value = getCart(restaurantId);
+    cart.clear();
     saveDatabase();
   }
 

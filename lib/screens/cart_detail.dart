@@ -49,7 +49,10 @@ class CartDetailScreen extends StatelessWidget {
                 children: [
                   Expanded(
                       child: ListView.builder(
-                          itemCount: controller.cart.length,
+                          itemCount: controller
+                              .getCart(mainStateController
+                                  .selectedRestaurant.value.restaurantId)
+                              .length,
                           itemBuilder: (context, index) => Slidable(
                                 child: Card(
                                   elevation: 8.0,
@@ -66,23 +69,37 @@ class CartDetailScreen extends StatelessWidget {
                                         Expanded(
                                             flex: 2,
                                             child: CartImageWidget(
-                                                cartModel:
-                                                    controller.cart[index],
+                                                cartModel: controller.getCart(
+                                                    mainStateController
+                                                        .selectedRestaurant
+                                                        .value
+                                                        .restaurantId)[index],
                                                 controller: controller)),
                                         Expanded(
                                             flex: 6,
                                             child: CartInfoWidget(
-                                                cartModel:
-                                                    controller.cart[index])),
+                                                cartModel: controller.getCart(
+                                                    mainStateController
+                                                        .selectedRestaurant
+                                                        .value
+                                                        .restaurantId)[index])),
                                         Center(
                                           child: ElegantNumberButton(
-                                            initialValue:
-                                                controller.cart[index].quantity,
+                                            initialValue: controller
+                                                .getCart(mainStateController
+                                                    .selectedRestaurant
+                                                    .value
+                                                    .restaurantId)[index]
+                                                .quantity,
                                             minValue: 1,
                                             maxValue: 100,
                                             onChanged: (value) {
                                               cartViewModelImp.updateCart(
                                                   controller,
+                                                  mainStateController
+                                                      .selectedRestaurant
+                                                      .value
+                                                      .restaurantId,
                                                   index,
                                                   value.toInt());
                                             },
@@ -108,8 +125,16 @@ class CartDetailScreen extends StatelessWidget {
                                           textConfirm: confirmText,
                                           middleText:
                                               deleteCartConfirmContentText,
-                                          onConfirm: () => cartViewModelImp
-                                              .deleteCart(controller, index));
+                                          onConfirm: () {
+                                            cartViewModelImp.deleteCart(
+                                                controller,
+                                                mainStateController
+                                                    .selectedRestaurant
+                                                    .value
+                                                    .restaurantId,
+                                                index);
+                                            Get.back();
+                                          });
                                     },
                                   )
                                 ],
