@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "590095301452",
+    "firebase_url": "https://eatitv2-3e76d-default-rtdb.firebaseio.com",
+    "project_id": "eatitv2-3e76d",
+    "storage_bucket": "eatitv2-3e76d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:590095301452:android:a91dacb4731913677eade9",
+        "android_client_info": {
+          "package_name": "pts.net.vn.eatit_v2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "590095301452-iht2breq2b057pim857ficeikudojdqe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDp8OyiAV9cM7fo-4FHdE2qa7J1ghfRPbs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "590095301452-iht2breq2b057pim857ficeikudojdqe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
