@@ -82,9 +82,7 @@ class MenuViewModelImp implements MenuViewModel {
 
     if (cartState.cart.length > 0) {
       var newCart = cartState.getCartAnonymous(mainState.selectedRestaurant.value.restaurantId);
-      newCart.forEach((element) =>
-          element.userUid = FirebaseAuth.instance.currentUser!.uid);
-      cartState.cart.addAll(newCart);
+      cartState.mergeCart(newCart,mainState.selectedRestaurant.value.restaurantId);
       cartState.saveDatabase();
       print(jsonEncode(cartState.cart));
     }

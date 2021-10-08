@@ -12,14 +12,18 @@ class CartStateController extends GetxController {
   var cart = List<CartModel>.empty(growable: true).obs;
   final box = GetStorage();
 
-  List<CartModel> getCartAnonymous(String restaurantId) => cart.where((item) =>
-      item.restaurantId == restaurantId && (item.userUid == KEY_ANONYMOUS)).toList();
+  List<CartModel> getCartAnonymous(String restaurantId) => cart
+      .where((item) =>
+          item.restaurantId == restaurantId && (item.userUid == KEY_ANONYMOUS))
+      .toList();
 
-  List<CartModel> getCart(String restaurantId) => cart.where((item) =>
-      item.restaurantId == restaurantId &&
-      (FirebaseAuth.instance.currentUser == null
-          ? item.userUid == KEY_ANONYMOUS
-          : item.userUid == FirebaseAuth.instance.currentUser!.uid)).toList();
+  List<CartModel> getCart(String restaurantId) => cart
+      .where((item) =>
+          item.restaurantId == restaurantId &&
+          (FirebaseAuth.instance.currentUser == null
+              ? item.userUid == KEY_ANONYMOUS
+              : item.userUid == FirebaseAuth.instance.currentUser!.uid))
+      .toList();
 
   addToCart(FoodModel foodModel, String restaurantId, {int quantity: 1}) async {
     try {
@@ -38,9 +42,8 @@ class CartStateController extends GetxController {
               : FirebaseAuth.instance.currentUser!.uid);
 
       if (isExists(cartItem, restaurantId)) {
-        var foodNeedToUpdate =
-            cart.firstWhere((element) => element.id == cartItem.id);
-        foodNeedToUpdate.quantity += quantity;
+        var foodNeedToUpdate = getCartNeedUpdate(cartItem, restaurantId);
+        if (foodNeedToUpdate != null) foodNeedToUpdate.quantity += quantity;
       } else {
         cart.add(cartItem);
       }
@@ -57,9 +60,10 @@ class CartStateController extends GetxController {
   isExists(CartModel cartItem, String restaurantId) => cart.any((e) =>
       e.id == cartItem.id &&
       e.restaurantId == restaurantId &&
-      (FirebaseAuth.instance.currentUser == null
-          ? e.userUid == KEY_ANONYMOUS
-          : e.userUid == FirebaseAuth.instance.currentUser!.uid));
+      e.userUid ==
+          (FirebaseAuth.instance.currentUser == null
+              ? KEY_ANONYMOUS
+              : FirebaseAuth.instance.currentUser!.uid));
 
   sumCart(String restaurantId) => getCart(restaurantId).length == 0
       ? 0
@@ -86,4 +90,29 @@ class CartStateController extends GetxController {
   }
 
   saveDatabase() => box.write(MY_CART_KEY, jsonEncode(cart));
+
+  void mergeCart(List<CartModel> cartItems, String restaurantId) {
+    if (cart.length > 0) {
+      cartItems.forEach((cartItem) {
+        if (isExists(cartItem, restaurantId)) {
+          var foodNeedToUpdate = getCartNeedUpdate(cartItem, restaurantId);
+          if (foodNeedToUpdate != null)
+            foodNeedToUpdate.quantity += cartItem.quantity;
+        } else {
+          var newCart = cartItem;
+          newCart.userUid = FirebaseAuth.instance.currentUser!.uid;
+          cart.add(newCart);
+        }
+      });
+    }
+  }
+
+  getCartNeedUpdate(CartModel cartItem, String restaurantId) =>
+      cart.firstWhere((e) =>
+          e.id == cartItem.id &&
+          e.restaurantId == restaurantId &&
+          e.userUid ==
+              (FirebaseAuth.instance.currentUser == null
+                  ? KEY_ANONYMOUS
+                  : FirebaseAuth.instance.currentUser!.uid));
 }

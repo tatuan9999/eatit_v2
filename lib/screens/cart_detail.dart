@@ -34,9 +34,12 @@ class CartDetailScreen extends StatelessWidget {
                         title: clearCartConfirmTitleText,
                         textCancel: cancelText,
                         textConfirm: confirmText,
+                        confirmTextColor: Colors.yellow,
                         middleText: clearCartConfirmContentText,
-                        onConfirm: () =>
-                            cartViewModelImp.clearCart(controller));
+                        onConfirm: () {
+                          cartViewModelImp.clearCart(controller);
+                          Get.back();
+                        });
                   },
                   icon: Icon(Icons.clear))
               : Container()
@@ -123,6 +126,7 @@ class CartDetailScreen extends StatelessWidget {
                                           title: deleteCartConfirmTitleText,
                                           textCancel: cancelText,
                                           textConfirm: confirmText,
+                                          confirmTextColor: Colors.yellow,
                                           middleText:
                                               deleteCartConfirmContentText,
                                           onConfirm: () {
